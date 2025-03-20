@@ -1,0 +1,230 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
+
+.login-container {
+  display: flex;
+  height: 100vh;
+}
+
+.left-row,
+.right-row {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.left-row {
+  background-color: #001e2b;
+}
+
+.right-row {
+  background: whitesmoke;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.logo-img {
+  max-width: 80%;
+  height: auto;
+}
+.login-form {
+  width: 100%; /* Ocupará todo el espacio disponible */
+  max-width: 450px; /* O puedes aumentar este valor si quieres que sea más ancho */
+  padding: 2rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 30px;
+  color: #191f39;
+  font-weight: lighter;
+}
+
+.error {
+  color: #d9534f;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.login-form label {
+  margin-bottom: 1rem;
+  display: block;
+  font-size: 18px;
+  text-align: left;
+  margin-top: 1rem;
+  color: #1f1f1f;
+  font-weight: lighter;
+}
+
+.login-form input {
+  background: #fafbfc;
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  border: #001e2b solid 0.1px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.login-form input:focus {
+  border-color: #007bff;
+}
+
+.login-form .login-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: #00ed64;
+  color: #001e2b;
+  font-size: 1rem;
+  font-weight: lighter;
+  border: #001e2b solid 0.1px;
+  border-radius: 50px;
+  margin-top: 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-form .login-btn:hover {
+  background: #10bd58;
+}
+
+.login-form .forgot-password {
+    width: 100%;
+    padding: 0.9rem;
+    color: #001e2b;
+    font-size: 1rem;
+    font-weight: lighter;
+    border: #001e2b solid 0.1px;
+    border-radius: 50px;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.login-form .forgot-password:hover {
+    background: white;
+}
+
+/*
+
+.col-l-6 {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+}
+
+.body-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background: #001e2b;
+}
+
+.left-container {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  max-width: 80%;
+  height: auto;
+}
+
+.right-container {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  background: #ffffff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.form-content h2 {
+  margin-bottom: 1.5rem;
+  font-size: 30px;
+  color: #191f39;
+  font-weight: bold;
+}
+
+.error {
+  color: #d9534f;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  font-size: 18px;
+  text-align: left;
+  margin-top: 1rem;
+  color: #1f1f1f;
+}
+
+input {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+input:focus {
+  border-color: #3e6b92;
+  box-shadow: 0 0 8px rgba(62, 107, 146, 0.5);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: #1fadff;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  margin-top: 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+  background: rgba(41, 90, 133, 0.796);
+}
+
+.forgot-password {
+  display: block;
+  color: #1fadff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: #244e74;
+}
+*/
