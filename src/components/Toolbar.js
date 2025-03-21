@@ -1,32 +1,59 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import nouserimage from "../../src/assets/no_user_image.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const API_BASE_URL = "http://localhost:3001";
 
 const Toolbar = () => {
-  const { currentUser } = useAuth();
-
+  const { currentUser, logout } = useAuth(); // Añadir función de logout
+  const navigate = useNavigate(); // Para redireccionar después de cerrar sesión
+  
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [sidebarOpen, setSidebarOpen ] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // Para manejar la búsqueda
 
   const handleMenuToggle = () => {
     setSidebarOpen(!sidebarOpen);
+    // Aquí se debe añadir la lógica para mostrar/ocultar el sidebar
+    // Por ejemplo, emitir un evento o usar un contexto para comunicarse con el componente padre
   };
   
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    // Implementar lógica de búsqueda (puedes añadir un debounce aquí)
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
 
   const notificationRef = useRef(null);
   const settingsRef = useRef(null);
 
+  // Ejemplo de notificaciones, idealmente vendrían de una API
   const notifications = [
     {
       id: 1,
-      text: "Tienes una notificacion",
+      text: "Tienes una nueva tarea asignada",
+      time: "Hace 10 minutos",
+      read: false
     },
+    {
+      id: 2,
+      text: "Recordatorio: Reunión a las 15:00",
+      time: "Hace 30 minutos",
+      read: true
+    }
   ];
 
+  // Cierra los menús cuando se hace clic fuera de ellos
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -47,137 +74,143 @@ const Toolbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Número de notificaciones no leídas
+  const unreadCount = notifications.filter(notif => !notif.read).length;
+
   return (
     <header className="toolbar">
-      <div>
-        <i className="fa-solid fa-bars" style={{color: "black", fontSize: "24px"}}
-        onClick={handleMenuToggle}></i>
-      </div>
-      <div className="search-container">
-        <input type="text" placeholder="Buscar..." className="search-input" />
+      <div className="toolbar-left">
+        <button 
+          className="menu-toggle-btn" 
+          onClick={handleMenuToggle}
+          aria-label="Toggle menu"
+        >
+          <i className="fa-solid fa-bars"></i>
+        </button>
       </div>
 
-      <div className="notification-container" ref={notificationRef}>
-        <div
-          className="notification-icon"
-          onClick={() => setShowNotifications(!showNotifications)}
-        >
-          <i className="fas fa-bell"></i>
-          {notifications.length > 0 && (
-            <span className="notification-badge">{notifications.length}</span>
+      <div className="search-container">
+        <div className="search-wrapper">
+          <i className="fas fa-search search-icon"></i>
+          <input 
+            type="text" 
+            placeholder="Buscar..." 
+            className="search-input" 
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+          {searchTerm && (
+            <button 
+              className="clear-search" 
+              onClick={() => setSearchTerm("")}
+              aria-label="Clear search"
+            >
+              <i className="fas fa-times"></i>
+            </button>
           )}
         </div>
-        {showNotifications && (
-          <div className="notification-dropdown">
-            <h4>Notificaciones</h4>
-            <ul>
-              {notifications.map((notif) => (
-                <li key={notif.id}>{notif.text}</li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
 
-      {currentUser?.profile_picture ? (
-        <img
-          src={`${API_BASE_URL}/${currentUser.profile_picture}`}
-          alt="Foto de perfil"
-          width="40px"
-          height="40px"
-          style={{
-            borderRadius: "50%",
-            objectFit: "cover",
-            marginRight: "10px",
-          }}
-        />
-      ) : (
-        <img
-          src={nouserimage}
-          alt="Foto de perfil por defecto"
-          width="50px"
-          style={{ borderRadius: "50%" }}
-        />
-      )}
-
-      <div className="user-info">
-        <p style={{ color: "black" }}>{currentUser.first_name}</p>
-      </div>
-
-      <div className="notification-container" ref={settingsRef}>
-        <div
-          className="notification-icon"
-          onClick={() => setShowSettings(!showSettings)}
-          style={{ marginLeft: "10px" }}
-        >
-          <i className="fas fa-chevron-down"></i>
+      <div className="toolbar-right">
+        <div className="notification-container" ref={notificationRef}>
+          <button
+            className="notification-icon"
+            onClick={() => setShowNotifications(!showNotifications)}
+            aria-label="Notifications"
+          >
+            <i className="fas fa-bell"></i>
+            {unreadCount > 0 && (
+              <span className="notification-badge">{unreadCount}</span>
+            )}
+          </button>
+          
+          {showNotifications && (
+            <div className="notification-dropdown">
+              <div className="dropdown-header">
+                <h4>Notificaciones</h4>
+                {notifications.length > 0 && (
+                  <button className="mark-all-read">Marcar todo como leído</button>
+                )}
+              </div>
+              
+              {notifications.length > 0 ? (
+                <ul className="notifications-list">
+                  {notifications.map((notif) => (
+                    <li key={notif.id} className={notif.read ? "read" : "unread"}>
+                      <div className="notification-content">
+                        <p>{notif.text}</p>
+                        <span className="notification-time">{notif.time}</span>
+                      </div>
+                      {!notif.read && <span className="unread-indicator"></span>}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="empty-notifications">
+                  <p>No tienes notificaciones</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-        {showSettings && (
-          <div className="notification-dropdown">
-            <ul
-              style={{
-                listStyle: "none",
-                color: "black",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 0, // Eliminar el padding por defecto
-              }}
-            >
-              <li
-                style={{
-                  display: "flex", // Usar flexbox para alinear los elementos en una fila
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "10px", // Agregar un poco de espacio alrededor de cada item
-                }}
-              >
-                <Link
-                  style={{
-                    listStyle: "none",
-                    textDecoration: "none",
-                    color: "black",
-                    display: "flex", // Para alinear el icono y el texto en una fila
-                    alignItems: "center",
-                  }}
-                >
-                  <i
-                    className="fas fa-cogs"
-                    style={{
-                      marginRight: "8px", // Separación entre el icono y el texto
-                    }}
-                  ></i>
-                  Configuración
-                </Link>
-              </li>
-              <li
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "10px",
-                }}
-              >
-                <Link
-                  style={{
-                    listStyle: "none",
-                    textDecoration: "none",
-                    color: "black",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <i
-                    className="fas fa-sign-out-alt"
-                    style={{
-                      marginRight: "8px", // Separación entre el icono y el texto
-                    }}
-                  ></i>
-                  Cerrar Sesión
-                </Link>
-              </li>
-            </ul>
+
+        <div className="user-profile">
+          <div className="user-avatar">
+            {currentUser?.profile_picture ? (
+              <img
+                src={`${API_BASE_URL}/${currentUser.profile_picture}`}
+                alt="Foto de perfil"
+                className="avatar-image"
+              />
+            ) : (
+              <img
+                src={nouserimage}
+                alt="Foto de perfil por defecto"
+                className="avatar-image"
+              />
+            )}
           </div>
-        )}
+
+          <div className="user-info">
+            <p className="user-name">{currentUser?.first_name || "Usuario"}</p>
+          </div>
+
+          <div className="settings-dropdown-container" ref={settingsRef}>
+            <button
+              className="settings-toggle"
+              onClick={() => setShowSettings(!showSettings)}
+              aria-label="User menu"
+            >
+              <i className="fas fa-chevron-down"></i>
+            </button>
+            
+            {showSettings && (
+              <div className="settings-dropdown">
+                <ul className="settings-menu">
+                  <li>
+                    <Link to="/profile" className="menu-item">
+                      <i className="fas fa-user"></i>
+                      <span>Mi Perfil</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/settings" className="menu-item">
+                      <i className="fas fa-cogs"></i>
+                      <span>Configuración</span>
+                    </Link>
+                  </li>
+                  <li className="divider"></li>
+                  <li>
+                    <button onClick={handleLogout} className="menu-item logout-btn">
+                      <i className="fas fa-sign-out-alt"></i>
+                      <span>Cerrar Sesión</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );
