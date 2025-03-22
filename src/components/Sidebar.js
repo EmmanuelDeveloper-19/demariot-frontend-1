@@ -3,8 +3,10 @@ import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import nouserimage from "../../src/assets/no_user_image.png";
 import logo from "../assets/logoar.-02.png";
+import { useSidebar } from "./SidebarContext";
 
-const Sidebar = ({ isCollapsed, toggleSidebar }) => {
+const Sidebar = () => {
+  const { isCollapsed, toggleSidebar} = useSidebar();
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -110,33 +112,6 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         <button className="collapse-toggle" onClick={toggleSidebar}>
           <i className={`fas fa-${isCollapsed ? 'angle-right' : 'angle-left'}`}></i>
         </button>
-      </div>
-
-      <div className="sidebar-profile">
-        <Link to="/userProfile" className="profile-link">
-          <div className="avatar-container">
-            {currentUser?.profile_picture ? (
-              <img
-                src={currentUser.profile_picture}
-                alt="Foto de perfil"
-                className="avatar-image"
-              />
-            ) : (
-              <img
-                src={nouserimage}
-                alt="Foto de perfil por defecto"
-                className="avatar-image"
-              />
-            )}
-          </div>
-          
-          {!isCollapsed && (
-            <div className="user-info-sidebar">
-              <p className="user-name">{currentUser?.name || "Usuario"}</p>
-              <span className="user-role">{currentUser?.role || "user"}</span>
-            </div>
-          )}
-        </Link>
       </div>
 
       <div className="sidebar-content">

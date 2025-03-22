@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import nouserimage from "../../src/assets/no_user_image.png";
 import { Link, useNavigate } from "react-router-dom";
+import { useSidebar } from "./SidebarContext";
 
 const API_BASE_URL = "http://localhost:3001";
 
 const Toolbar = () => {
+  const { toggleSidebar } = useSidebar();
   const { currentUser, logout } = useAuth(); // Añadir función de logout
   const navigate = useNavigate(); // Para redireccionar después de cerrar sesión
   
@@ -82,7 +84,7 @@ const Toolbar = () => {
       <div className="toolbar-left">
         <button 
           className="menu-toggle-btn" 
-          onClick={handleMenuToggle}
+          onClick={toggleSidebar}
           aria-label="Toggle menu"
         >
           <i className="fa-solid fa-bars"></i>

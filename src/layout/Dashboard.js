@@ -1,26 +1,15 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
-import Toolbar from "../components/Toolbar";
+// src/layout/Dashboard.js
+import React from "react";
+import { SidebarProvider } from "../components/SidebarContext";  // Asegúrate de que este archivo exista
+import Layout from "../layout/Layout"; // Importa el Layout aquí
 
 const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const handleMenuToggle = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
   return (
-    <div className="dashboard">
-      {/* Pasamos el estado sidebarOpen y la función handleMenuToggle */}
-      <Sidebar sidebarOpen={sidebarOpen} />
-      <div className={`main-area ${sidebarOpen ? 'expanded' : ''}`}>
-        <Toolbar onMenuToggle={handleMenuToggle} />
-        <main className="content">
-          <Outlet />
-        </main>
+    <SidebarProvider>
+      <div c>
+        <Layout />
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
